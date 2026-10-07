@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<title>Reader001 · 我的书架</title>
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/shelf.css" />
+<link rel="stylesheet" href="css/reader.css" />
+</head>
+<body>
+
+<!-- ============================ 书架页 ============================ -->
+<div id="pageShelf" class="page shelf-page">
+  <header class="q-header">
+    <div class="q-header-inner">
+      <a class="q-logo" href="#/shelf" title="我的书架">
+        <span class="q-logo-mark">
+        <svg width="32" height="32" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+                  <defs><linearGradient id="qMarkLogo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a96f0"/><stop offset="1" stop-color="#1254b0"/></linearGradient></defs>
+                  <rect width="64" height="64" rx="15.36" fill="url(#qMarkLogo)"/>
+                  <path d="M6.85 15.49Q19.2 14.21 32 18.31L32 47.1Q19.2 51.2 6.85 49.92Z" fill="#0d3e82"/>
+                  <path d="M57.15 15.49Q44.8 14.21 32 18.31L32 47.1Q44.8 51.2 57.15 49.92Z" fill="#0d3e82"/>
+                  <path d="M7.36 15.87Q19.2 14.59 32 18.69L32 45.31Q19.2 49.41 7.36 48.13Z" fill="#ffffff"/>
+                  <path d="M56.64 15.87Q44.8 14.59 32 18.69L32 45.31Q44.8 49.41 56.64 48.13Z" fill="#ffffff"/>
+                  <rect x="31.49" y="18.69" width="1.02" height="26.62" fill="#b0d0f6"/>
+                  <path fill="#104a98" fill-rule="evenodd" d="M24.27 21.76L27.72 21.76L27.72 39.04L24.27 39.04Z M27.72 21.76L34.98 21.76L35.49 21.80L36.00 21.92L36.47 22.12L36.91 22.39L37.30 22.72L37.64 23.11L37.91 23.55L38.10 24.03L38.22 24.53L38.26 25.04L38.26 28.84L38.26 28.84L38.22 29.36L38.10 29.86L37.91 30.34L37.64 30.77L37.30 31.17L36.91 31.50L36.47 31.77L36.00 31.97L35.49 32.09L34.98 32.13L27.72 32.13Z M30.80 32.13L34.98 32.13L39.68 39.04L35.50 39.04Z M27.72 24.70L32.82 24.70L33.43 24.79L33.99 25.08L34.43 25.52L34.71 26.07L34.81 26.68L34.71 27.30L34.43 27.85L33.99 28.29L33.43 28.57L32.82 28.67L27.72 28.67Z"/>
+                </svg>
+        </span>
+        <span class="q-logo-text">Reader001<em>本地 TXT 阅读器</em></span>
+      </a>
+      <nav class="q-nav" id="shelfNav">
+        <a href="#/shelf" class="active" data-filter="all">我的书架</a>
+        <a href="#/shelf" data-filter="reading">在读</a>
+        <a href="#/shelf" data-filter="finished">已读完</a>
+      </nav>
+      <div class="q-header-right">
+        <span class="q-storage" id="storageInfo" title="本地存储占用"></span>
+        <button class="q-btn-primary" id="btnImport">＋ 导入 TXT</button>
+        <button class="q-btn-ghost" id="btnShelfScan" title="扫描安装目录里的「书架」文件夹，把里面的 txt 导入书架" hidden>⟳ 书架</button>
+        <button class="q-btn-ghost" id="btnShelfTheme" title="切换深色 / 浅色">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="q-main">
+    <div class="q-file-hint" id="fileHint" hidden>
+      当前以本地文件方式打开，浏览器可能限制本地存储。若导入的 txt 显示乱码，请在右上角「编码」中指定文件编码（UTF-8 / GBK / Big5 / UTF-16），再重新导入。
+    </div>
+
+    <section class="q-panel">
+      <div class="q-panel-head">
+        <h2 class="q-panel-title" id="shelfTitle">我的书架</h2>
+        <span class="q-panel-sub" id="shelfSub">共 0 本</span>
+        <div class="q-panel-tools">
+          <label class="q-select" for="encSelect" title="导入的 txt 显示乱码时，在这里指定文件编码，再重新导入即可">
+            <span>编码</span>
+            <select id="encSelect">
+              <option value="auto">自动识别</option>
+              <option value="utf-8">UTF-8</option>
+              <option value="gb18030">GBK / GB18030</option>
+              <option value="big5">Big5（繁体）</option>
+              <option value="utf-16le">UTF-16LE</option>
+              <option value="utf-16be">UTF-16BE</option>
+            </select>
+          </label>
+          <label class="q-select" for="sortSelect">
+            <span>排序</span>
+            <select id="sortSelect">
+              <option value="recent">最近阅读</option>
+              <option value="imported">导入时间</option>
+              <option value="name">书名</option>
+              <option value="progress">阅读进度</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="q-books" id="bookGrid"></div>
+
+      <div class="q-empty" id="shelfEmpty" hidden>
+        <div class="q-empty-icon">
+        <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+                  <defs><linearGradient id="qMarkEmpty" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a96f0"/><stop offset="1" stop-color="#1254b0"/></linearGradient></defs>
+                  <rect width="64" height="64" rx="15.36" fill="url(#qMarkEmpty)"/>
+                  <path d="M6.85 15.49Q19.2 14.21 32 18.31L32 47.1Q19.2 51.2 6.85 49.92Z" fill="#0d3e82"/>
+                  <path d="M57.15 15.49Q44.8 14.21 32 18.31L32 47.1Q44.8 51.2 57.15 49.92Z" fill="#0d3e82"/>
+                  <path d="M7.36 15.87Q19.2 14.59 32 18.69L32 45.31Q19.2 49.41 7.36 48.13Z" fill="#ffffff"/>
+                  <path d="M56.64 15.87Q44.8 14.59 32 18.69L32 45.31Q44.8 49.41 56.64 48.13Z" fill="#ffffff"/>
+                  <rect x="31.49" y="18.69" width="1.02" height="26.62" fill="#b0d0f6"/>
+                  <path fill="#104a98" fill-rule="evenodd" d="M24.27 21.76L27.72 21.76L27.72 39.04L24.27 39.04Z M27.72 21.76L34.98 21.76L35.49 21.80L36.00 21.92L36.47 22.12L36.91 22.39L37.30 22.72L37.64 23.11L37.91 23.55L38.10 24.03L38.22 24.53L38.26 25.04L38.26 28.84L38.26 28.84L38.22 29.36L38.10 29.86L37.91 30.34L37.64 30.77L37.30 31.17L36.91 31.50L36.47 31.77L36.00 31.97L35.49 32.09L34.98 32.13L27.72 32.13Z M30.80 32.13L34.98 32.13L39.68 39.04L35.50 39.04Z M27.72 24.70L32.82 24.70L33.43 24.79L33.99 25.08L34.43 25.52L34.71 26.07L34.81 26.68L34.71 27.30L34.43 27.85L33.99 28.29L33.43 28.57L32.82 28.67L27.72 28.67Z"/>
+                </svg>
+        </div>
+        <h3>书架还是空的</h3>
+        <p>把 .txt 文件拖进这个页面，或者点击下面的按钮导入。<br />安装版也可以把 txt 放进安装目录的「书架」文件夹，再点右上角「⟳ 书架」扫描导入。<br />支持 UTF-8 / GBK 编码，自动识别章节，阅读进度保存在本地。</p>
+        <button class="q-btn-primary q-btn-lg" id="btnImportEmpty">＋ 导入 TXT 文件</button>
+        <p class="q-empty-tip">提示：导入后点「继续阅读」即可进入沉浸式阅读界面。</p>
+        <p class="q-empty-tip" id="shelfPathTip" hidden></p>
+      </div>
+    </section>
+  </main>
+
+  <input type="file" id="fileInput" accept=".txt,text/plain" multiple hidden />
+  <div class="q-drop-mask" id="dropMask"><div class="q-drop-box"><span>松开鼠标，导入 TXT 文件</span></div></div>
+  <div class="q-toast" id="shelfToast" role="status" aria-live="polite"></div>
+</div>
+
+<!-- ============================ 阅读页 ============================ -->
+<div id="pageReader" class="page reader-page" data-rd-theme="default" hidden>
+  <header class="rd-header" id="rdHeader">
+    <button class="rd-icon-btn" id="rdBack" title="返回书架 (Esc)">‹</button>
+    <div class="rd-head-mid">
+      <span class="rd-book-name" id="rdBookName">书名</span>
+      <span class="rd-chapter-name" id="rdChapterName">章节</span>
+    </div>
+    <div class="rd-head-actions">
+      <button class="rd-text-btn" id="rdBtnCatalog">目录</button>
+      <button class="rd-text-btn" id="rdBtnSettings">设置</button>
+      <button class="rd-icon-btn" id="rdBtnFullscreen" title="全屏阅读 (F)">⛶</button>
+    </div>
+  </header>
+  <div class="rd-progress"><i class="rd-progress-bar" id="rdProgressBar"></i></div>
+
+  <main class="rd-main" id="rdMain" tabindex="0">
+    <article class="rd-article" id="rdArticle">
+      <h1 class="rd-title" id="rdTitle"></h1>
+      <div class="rd-meta" id="rdMeta"></div>
+      <div class="rd-content" id="rdContent"></div>
+      <div class="rd-end">
+        <p class="rd-end-tip">— 本章完 —</p>
+        <div class="rd-end-nav">
+          <button class="q-btn-ghost" id="rdPrevBottom">上一章</button>
+          <button class="q-btn-ghost" id="rdCatalogBottom">查看目录</button>
+          <button class="q-btn-primary" id="rdNextBottom">下一章</button>
+        </div>
+      </div>
+    </article>
+    <button class="rd-arrow rd-arrow-prev" id="rdArrowPrev" title="上一章 (←)">‹</button>
+    <button class="rd-arrow rd-arrow-next" id="rdArrowNext" title="下一章 (→)">›</button>
+    <div class="rd-drawer-mask" id="rdDrawerMask" hidden></div>
+
+    <!-- 目录抽屉 -->
+    <aside class="rd-drawer" id="rdCatalogDrawer" hidden>
+      <div class="rd-drawer-head">
+        <div>
+          <strong id="rdCatalogBook">书名</strong>
+          <span id="rdCatalogCount">共 0 章</span>
+        </div>
+        <button class="rd-icon-btn" id="rdCatalogClose" title="收起目录">✕</button>
+      </div>
+      <div class="rd-drawer-filter">
+        <input type="search" id="rdCatalogFilter" placeholder="输入章节号或章节名筛选" />
+      </div>
+      <div class="rd-catalog-list" id="rdCatalogList"></div>
+      <div class="rd-catalog-more" id="rdCatalogMore" hidden><button class="q-btn-ghost" id="rdCatalogMoreBtn">加载更多章节</button></div>
+    </aside>
+
+    <!-- 设置面板 -->
+    <section class="rd-settings" id="rdSettings" hidden>
+      <div class="rd-set-head">
+        <strong>阅读设置</strong>
+        <button class="rd-icon-btn" id="rdSettingsClose" title="关闭">✕</button>
+      </div>
+      <div class="rd-set-body">
+        <div class="rd-set-row">
+          <span class="rd-set-label">背景</span>
+          <div class="rd-themes" id="rdThemes">
+            <button class="rd-swatch" data-theme="default" title="默认白"><i></i><span>默认</span></button>
+            <button class="rd-swatch" data-theme="paper" title="米黄"><i></i><span>米黄</span></button>
+            <button class="rd-swatch" data-theme="green" title="护眼绿"><i></i><span>护眼</span></button>
+            <button class="rd-swatch" data-theme="pink" title="淡粉"><i></i><span>淡粉</span></button>
+            <button class="rd-swatch" data-theme="gray" title="浅灰"><i></i><span>浅灰</span></button>
+            <button class="rd-swatch" data-theme="night" title="夜间"><i></i><span>夜间</span></button>
+            <button class="rd-swatch" data-theme="black" title="纯黑"><i></i><span>纯黑</span></button>
+          </div>
+        </div>
+
+        <div class="rd-set-row">
+          <span class="rd-set-label">字体</span>
+          <div class="rd-chips" id="rdFonts">
+            <button class="rd-chip" data-font="song">宋体</button>
+            <button class="rd-chip" data-font="yahei">雅黑</button>
+            <button class="rd-chip" data-font="hei">黑体</button>
+            <button class="rd-chip" data-font="kai">楷体</button>
+            <button class="rd-chip" data-font="fang">仿宋</button>
+          </div>
+        </div>
+
+        <div class="rd-set-row">
+          <span class="rd-set-label">字号</span>
+          <div class="rd-size">
+            <button class="rd-step" id="rdFontMinus" title="缩小">A－</button>
+            <input type="range" id="rdFontSize" min="14" max="40" step="1" value="20" />
+            <button class="rd-step" id="rdFontPlus" title="放大">A＋</button>
+            <b class="rd-size-val" id="rdFontSizeVal">20</b>
+          </div>
+        </div>
+
+        <div class="rd-set-row">
+          <span class="rd-set-label">行距</span>
+          <div class="rd-chips" id="rdLines">
+            <button class="rd-chip" data-lh="1.4">1.4</button>
+            <button class="rd-chip" data-lh="1.6">1.6</button>
+            <button class="rd-chip" data-lh="1.8">1.8</button>
+            <button class="rd-chip" data-lh="2.1">2.1</button>
+            <button class="rd-chip" data-lh="2.4">2.4</button>
+          </div>
+        </div>
+
+        <div class="rd-set-row">
+          <span class="rd-set-label">段距</span>
+          <div class="rd-chips" id="rdParas">
+            <button class="rd-chip" data-ps="0">无</button>
+            <button class="rd-chip" data-ps="0.4">小</button>
+            <button class="rd-chip" data-ps="0.8">中</button>
+            <button class="rd-chip" data-ps="1.2">大</button>
+          </div>
+        </div>
+
+        <div class="rd-set-row">
+          <span class="rd-set-label">页宽</span>
+          <div class="rd-chips" id="rdWidths">
+            <button class="rd-chip" data-width="720">窄</button>
+            <button class="rd-chip" data-width="900">适中</button>
+            <button class="rd-chip" data-width="1150">宽</button>
+            <button class="rd-chip" data-width="0">全屏</button>
+          </div>
+        </div>
+
+        <div class="rd-set-row">
+          <span class="rd-set-label">翻页</span>
+          <div class="rd-chips" id="rdTurns">
+            <button class="rd-chip" data-turn="scroll">滚动阅读</button>
+            <button class="rd-chip" data-turn="click">点击翻页</button>
+            <button class="rd-chip" data-turn="keyboard">仅键盘/按钮</button>
+          </div>
+        </div>
+      </div>
+      <div class="rd-set-foot">
+        <span class="rd-set-hint" id="rdSetHint">进度与设置会自动保存在本机</span>
+        <button class="q-btn-ghost" id="rdReset">恢复默认</button>
+      </div>
+    </section>
+
+    <div class="rd-toast" id="rdToast" role="status" aria-live="polite"></div>
+  </main>
+
+  <footer class="rd-footer" id="rdFooter">
+    <button class="rd-text-btn" id="rdFooterCatalog">目录</button>
+    <button class="rd-text-btn" id="rdFooterPrev">上一章</button>
+    <span class="rd-foot-info" id="rdFooterInfo">第 0 / 0 章</span>
+    <button class="rd-text-btn" id="rdFooterNext">下一章</button>
+    <button class="rd-text-btn" id="rdFooterSettings">设置</button>
+  </footer>
+</div>
+
+<!-- ============================ 重命名弹窗 ============================ -->
+<div class="q-modal-mask" id="editModal" hidden>
+  <div class="q-modal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+    <div class="q-modal-head"><strong id="editModalTitle">编辑书籍信息</strong><button class="rd-icon-btn" id="editCancel2" title="关闭">✕</button></div>
+    <div class="q-modal-body">
+      <label class="q-field"><span>书名</span><input type="text" id="editName" maxlength="60" /></label>
+      <label class="q-field"><span>作者</span><input type="text" id="editAuthor" maxlength="30" placeholder="可留空" /></label>
+      <p class="q-field-tip" id="editTip">只是在本地书架里显示，不会改动原始 txt 文件。</p>
+    </div>
+    <div class="q-modal-foot">
+      <button class="q-btn-ghost" id="editCancel">取消</button>
+      <button class="q-btn-primary" id="editSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/parser.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/app.js"></script>
+<script src="js/reader.js"></script>
+<script src="js/boot.js"></script>
+</body>
+</html>

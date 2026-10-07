@@ -1,0 +1,154 @@
+/* ============================================================
+   shelf.css — 书架页（顶部导航 + 书籍卡片）
+   ============================================================ */
+.shelf-page { min-height: 100%; display: flex; flex-direction: column; }
+
+/* ---------- 顶部导航 ---------- */
+.q-header {
+  position: sticky; top: 0; z-index: 100;
+  height: var(--q-header-h);
+  background: var(--q-panel);
+  border-bottom: 1px solid var(--q-border);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .02);
+}
+.q-header-inner {
+  max-width: 1240px; height: 100%; margin: 0 auto; padding: 0 20px;
+  display: flex; align-items: center; gap: 26px;
+}
+.q-logo { display: flex; align-items: center; gap: 9px; flex: 0 0 auto; }
+.q-logo-mark {
+  width: 32px; height: 32px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(26, 111, 212, .35);
+}
+.q-logo-mark svg { display: block; width: 32px; height: 32px; }
+.q-logo-text { font-size: 19px; font-weight: 700; color: var(--q-primary); letter-spacing: .5px; line-height: 1.1; }
+.q-logo-text em {
+  display: block; font-style: normal; font-size: 12px; font-weight: 400;
+  color: var(--q-text-3); letter-spacing: 0;
+}
+.q-nav { display: flex; align-items: center; gap: 4px; flex: 1 1 auto; height: 100%; }
+.q-nav a {
+  position: relative; height: 100%; padding: 0 14px;
+  display: inline-flex; align-items: center;
+  color: var(--q-text); font-size: 15px; transition: color .15s;
+}
+.q-nav a:hover { color: var(--q-primary); }
+.q-nav a.active { color: var(--q-primary); font-weight: 700; }
+.q-nav a.active::after {
+  content: ""; position: absolute; left: 12px; right: 12px; bottom: -1px; height: 3px;
+  border-radius: 3px 3px 0 0; background: var(--q-primary);
+}
+.q-header-right { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
+.q-storage { color: var(--q-text-3); font-size: 12px; white-space: nowrap; }
+
+/* ---------- 主体 ---------- */
+.q-main { flex: 1 1 auto; width: 100%; max-width: 1240px; margin: 0 auto; padding: 20px; }
+.q-file-hint {
+  margin-bottom: 14px; padding: 10px 14px;
+  border: 1px solid #f0d9a8; border-radius: var(--q-radius);
+  background: #fffaf0; color: #8a6d3b; font-size: 13px; line-height: 1.6;
+}
+body.dark .q-file-hint { background: #2a2418; border-color: #443a20; color: #d8c48b; }
+
+.q-panel { background: var(--q-panel); border-radius: var(--q-radius); box-shadow: var(--q-shadow); padding: 6px 22px 26px; }
+.q-panel-head {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 0 12px; border-bottom: 1px solid var(--q-border);
+}
+.q-panel-title {
+  position: relative; padding-left: 12px; font-size: 19px; font-weight: 700; color: var(--q-text);
+}
+.q-panel-title::before {
+  content: ""; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 4px; height: 18px; border-radius: 2px; background: var(--q-primary);
+}
+.q-panel-sub { color: var(--q-text-3); font-size: 13px; }
+.q-panel-tools { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.q-select { display: inline-flex; align-items: center; gap: 6px; color: var(--q-text-3); font-size: 13px; }
+.q-select select {
+  height: 30px; padding: 0 8px; border: 1px solid var(--q-border-2); border-radius: var(--q-radius-sm);
+  background: var(--q-panel); color: var(--q-text-2); cursor: pointer;
+}
+
+/* ---------- 书籍列表 ---------- */
+.q-books {
+  display: grid; gap: 18px; padding: 20px 0 4px;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+}
+.q-book {
+  display: flex; gap: 14px; padding: 14px;
+  border: 1px solid var(--q-border); border-radius: var(--q-radius);
+  background: var(--q-panel); transition: box-shadow .18s, transform .18s, border-color .18s;
+}
+.q-book:hover { box-shadow: var(--q-shadow-hover); border-color: transparent; transform: translateY(-2px); }
+.q-book-cover {
+  position: relative; flex: 0 0 96px; height: 128px; border-radius: var(--q-radius-sm);
+  overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
+  padding: 10px 8px; color: #fff; text-align: center;
+  background: linear-gradient(160deg, hsl(var(--hue, 210) 62% 58%), hsl(var(--hue, 210) 58% 36%));
+  box-shadow: inset 0 0 24px rgba(0, 0, 0, .18);
+}
+.q-book-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.q-book-cover .cb-title {
+  font-size: 15px; font-weight: 700; line-height: 1.35; letter-spacing: 1px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .35);
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+}
+.q-book-cover .cb-author { font-size: 11px; opacity: .9; text-shadow: 0 1px 3px rgba(0, 0, 0, .35); }
+.q-book-cover .cb-badge {
+  position: absolute; top: 6px; left: -22px; width: 74px;
+  transform: rotate(-38deg); background: rgba(255, 255, 255, .92); color: var(--q-primary);
+  font-size: 10px; font-weight: 700; line-height: 15px; text-align: center;
+}
+.q-book-info { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+.q-book-name {
+  font-size: 16px; font-weight: 700; color: var(--q-text); line-height: 1.4;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.q-book-name:hover { color: var(--q-primary); }
+.q-book-meta { margin-top: 6px; color: var(--q-text-3); font-size: 12px; line-height: 1.7; }
+.q-book-meta b { color: var(--q-text-2); font-weight: 400; }
+.q-book-prog { margin-top: 10px; height: 5px; border-radius: 3px; background: var(--q-border); overflow: hidden; }
+.q-book-prog i { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, #5aa9f8, var(--q-primary)); transition: width .3s; }
+.q-book-prog-text { margin-top: 6px; color: var(--q-text-3); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.q-book-actions { margin-top: auto; padding-top: 12px; display: flex; align-items: center; gap: 12px; }
+.q-book-actions .q-btn-primary { height: 30px; padding: 0 18px; font-size: 13px; }
+
+/* ---------- 空状态 ---------- */
+.q-empty { padding: 60px 20px 70px; text-align: center; }
+.q-empty-icon { width: 64px; height: 64px; margin: 0 auto; line-height: 1; }
+.q-empty-icon svg { display: block; width: 64px; height: 64px; }
+.q-empty h3 { margin-top: 14px; font-size: 17px; color: var(--q-text); }
+.q-empty p { margin-top: 10px; color: var(--q-text-3); font-size: 13px; line-height: 1.9; }
+.q-empty .q-btn-lg { margin-top: 22px; }
+.q-empty-tip { font-size: 12px !important; }
+
+/* ---------- 拖拽遮罩 ---------- */
+.q-drop-mask {
+  position: fixed; inset: 0; z-index: 800; display: none;
+  align-items: center; justify-content: center; background: rgba(0, 0, 0, .38);
+}
+.q-drop-mask.show { display: flex; }
+.q-drop-box {
+  padding: 46px 70px; border: 3px dashed #fff; border-radius: 14px;
+  background: rgba(26, 111, 212, .85); color: #fff; font-size: 20px; font-weight: 700;
+}
+
+/* ---------- 小屏适配 ---------- */
+/* 720px 以下才收起导航：WebView2 在 150% 缩放下 1281 物理像素 ≈ 854 CSS 像素，
+   若阈值取 860 会导致默认窗口尺寸下导航与 Reader001 副标题被隐藏。 */
+@media (max-width: 720px) {
+  .q-header-inner { gap: 14px; padding: 0 12px; }
+  .q-logo-text em { display: none; }
+  .q-nav { display: none; }
+  .q-main { padding: 14px; }
+  .q-books { grid-template-columns: 1fr; }
+  .q-storage { display: none; }
+}
+@media (max-width: 520px) {
+  .q-panel { padding: 6px 14px 20px; }
+  .q-book-cover { flex: 0 0 80px; height: 108px; }
+  .q-logo-text { font-size: 17px; }
+  .q-logo-text em { font-size: 11px; }
+}
